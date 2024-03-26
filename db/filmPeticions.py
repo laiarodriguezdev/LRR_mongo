@@ -1,4 +1,4 @@
-from db import film
+from db import filmConnection
 from bson.objectid import ObjectId
 from datetime import datetime
 import json
@@ -9,7 +9,7 @@ def film_schema(film)->dict:
             "title": film["title"],
             "director": film["director"],
             "year": film["year"],
-            "genere": film["genere"],
+            "genere": film["genre"],
             "rating": film["rating"],
             "country": film["country"],
     }
@@ -19,12 +19,22 @@ def films_schema(films) ->dict:
 
 
     
-def consulta():
+def getAllFilms():
     try:    
-        conn = film.db()
-        data = conn.db.find()
-        result = data
+        conn = filmConnection.db()
+        data = conn.films.find()
+        result = [film_schema(film) for film in data]
         return result
     except Exception as e:
         return f'Error connexió: {e}'
+
+def getFilmsByGen(genre):
+    try:
+        conn = filmConnection.db()
+        data = conn.films.find()
+        data=conn.films.find({"genre": genre})
+        result = films_schema(data)
+        return result
+    except Exception as e:
+        return f'Error conexió {e}'
     

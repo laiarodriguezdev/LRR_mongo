@@ -4,6 +4,6 @@ class Film(BaseModel):
     title:str
     director:str 
     year:int
-    genere:str
+    genre:str
     rating:int
     country: str
