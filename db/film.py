@@ -1,6 +1,6 @@
 import pymongo
 
-#AQUEST FITXER NOMÉS S'ENCARREGA DE CONECTARSE AMB LA BBDD. 
+#AQUEST FITXER NOMÉS S'ENCARREGA DE CONECTAR-SE AMB LA BBDD. 
 def db():
     try:
         return pymongo.MongoClient("mongodb://localhost:27017/").films
