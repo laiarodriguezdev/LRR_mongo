@@ -38,7 +38,7 @@ def deleteFilm(id):
 #RETORNA LES PELIS DE ACTION, BIOGRAPHY, ETC. 
 @app.get("/filmsGenre")
 def getFilmsByGenre(genre: str = "Action"):
-    return filmPeticions.getFilmsByGen(genre)
+    return filmPeticions.getFilmsByGenre(genre)
 
 #RETORNA LES PELIS EN ORDRE ASC/DASC I SEGONS LA KEY. 
 @app.get("/filmsOrder")
