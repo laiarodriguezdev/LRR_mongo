@@ -17,13 +17,21 @@ def film_schema(film)->dict:
 def films_schema(films) ->dict:
     return[film_schema(film) for film in films]
 
-
     
 def getAllFilms():
     try:    
         conn = filmConnection.db()
         data = conn.films.find()
         result = [film_schema(film) for film in data]
+        return result
+    except Exception as e:
+        return f'Error connexió: {e}'
+
+def getFilmById(id):
+    try:    
+        conn = filmConnection.db()
+        data = conn.films.find_one({"_id" : ObjectId(id)})
+        result = film_schema(data)
         return result
     except Exception as e:
         return f'Error connexió: {e}'
