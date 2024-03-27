@@ -127,7 +127,7 @@ def deleteFilm(id):
     except Exception as e:
         return {"status": -1, "message": f"Error de connexió: {e}"}
     
-def getFilmsByGen(genre):
+def getFilmsByGenre(genre):
     try:
         conn = filmConnection.db()
         data = conn.films.find({"genre": genre})

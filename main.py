@@ -30,7 +30,7 @@ def createFilm(film: Film):
 
 #ACTUALITZA UN NOU DOCUMENT/FILM. 
 @app.put("/film/{id}")
-def updateProduct(id, film:Film):
+def updateFilm(id, film:Film):
     data=filmPeticions.updateFilm(id, film)
     return data
 
@@ -43,7 +43,7 @@ def deleteFilm(id):
 
 #RETORNA LES PELIS DE ACTION, BIOGRAPHY, ETC. 
 @app.get("/filmsGenre")
-def getFilmsByGen(genre: str = "Action"):
+def getFilmsByGenre(genre: str = "Action"):
     data= filmPeticions.getFilmsByGen(genre)
     return data
 
