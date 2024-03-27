@@ -4,12 +4,12 @@ from Model.Film import Film
 from db import filmConnection
 from db import filmPeticions
 
-app = FastAPI()
-
+app = FastAPI(title="Laia Rodríguez Ramos - CRUD + Consultes avançades")
 
 # @app.get("/")
 # def read_root():
 #     return {"Hello": "World"}
+
 
 #RETORNA TOTA LA LLISTA D'OBJECTES
 @app.get("/films")
@@ -21,12 +21,6 @@ def getFilms():
 @app.get("/films/{id}")
 def getFilmById(id):
     data = filmPeticions.getFilmById(id)
-    return data
-
-#RETORNA LES PELIS DE ACTION, BIOGRAPHY, ETC. 
-@app.get("/filmsGenre")
-def getFilmsByGen(genre: str = "Action"):
-    data= filmPeticions.getFilmsByGen(genre)
     return data
 
 #CREA UN NOU DOCUMENT
@@ -45,4 +39,24 @@ def updateProduct(id, film:Film):
 @app.delete("/film/{id}")
 def deleteFilm(id):
     data=filmPeticions.deleteFilm(id)
+    return data
+
+
+#RETORNA LES PELIS DE ACTION, BIOGRAPHY, ETC. 
+@app.get("/filmsGenre")
+def getFilmsByGen(genre: str = "Action"):
+    data= filmPeticions.getFilmsByGen(genre)
+    return data
+
+#RETORNA LES PELIS EN ORDRE ASC/DASC I SEGONS LA KEY. 
+@app.get("/filmsOrder")
+def getFilmsByOrder(field: str = "title", order: str = "asc"):
+    userOrder = 1 if order == "asc" else -1
+    data = filmPeticions.getFilmsByOrder(field, userOrder)
+    return data
+
+#RETORNA TANTES PELIS COM L'USUARI VULGUI. 
+@app.get("/filmsLimit")
+def getFilmsByLimit(limit: int):
+    data = filmPeticions.getFilmsByLimit(limit)
     return data
