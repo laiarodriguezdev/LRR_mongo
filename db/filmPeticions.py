@@ -3,7 +3,7 @@ from bson.objectid import ObjectId
 from datetime import datetime
 import json
 
-#Schema que ara  per poder operar amb l'objecte 
+#SCHEMA
 def film_schema(film)->dict:
     return {"id": str(film["_id"]),
             "title": film["title"],
@@ -12,6 +12,8 @@ def film_schema(film)->dict:
             "genere": film["genre"],
             "rating": film["rating"],
             "country": film["country"],
+            "created_at": film["created_at"],
+            "update_at": film["update_at"]
     }
     
 def films_schema(films) ->dict:
@@ -22,27 +24,126 @@ def getAllFilms():
     try:    
         conn = filmConnection.db()
         data = conn.films.find()
-        result = [film_schema(film) for film in data]
+        films = [film_schema(film) for film in data]
+        if films:
+            result = {
+                "status": 1,
+                "data": films
+            }
+        else:
+            result = {
+                "status": -1,
+                "message": "Cap pel·lícula trobada"
+            }
         return result
     except Exception as e:
-        return f'Error connexió: {e}'
+        return {
+            "status": -1,
+            "message": f'Error de connexió: {e}'
+        }
 
 def getFilmById(id):
     try:    
         conn = filmConnection.db()
         data = conn.films.find_one({"_id" : ObjectId(id)})
-        result = film_schema(data)
+        if data:
+            result = {
+                "status": 1,
+                "data": film_schema(data)
+            }
+        else:
+            result = {
+                "status": -1,
+                "message": "Cap pel·lícula trobada"
+            }
         return result
     except Exception as e:
-        return f'Error connexió: {e}'
+        return {
+            "status": -1,
+            "message": f'Error de connexió: {e}'
+        }
 
 def getFilmsByGen(genre):
     try:
         conn = filmConnection.db()
-        data = conn.films.find()
-        data=conn.films.find({"genre": genre})
-        result = films_schema(data)
+        data = conn.films.find({"genre": genre})
+        films = [film_schema(film) for film in data]
+        if films:
+            result = {
+                "status": 1,
+                "data": films
+            }
+        else:
+            result = {
+                "status": -1,
+                "message": f"Cap pel·lícula trobada pel gènere: {genre}"
+            }
         return result
     except Exception as e:
-        return f'Error conexió {e}'
+        return {
+            "status": -1,
+            "message": f'Error de connexió: {e}'
+        }
+
+def createFilm(new_film_data):
+    try:
+        conn = filmConnection.db()
+        now = datetime.now()
+        data={
+            "title": new_film_data.title,
+            "director": new_film_data.director,
+            "year": new_film_data.year,
+            "genre": new_film_data.genre,
+            "rating": new_film_data.rating,
+            "country": new_film_data.country,
+            "created_at": now,
+            "update_at": now
+        }
+        id = conn.films.insert_one(data).inserted_id
+        
+        response = {
+            "status": 1,
+            "data": {
+                "id": str(id)
+                }
+        }
+        
+        return response;
+    except Exception as e:
+        return {"status": -1, "message": f"Error de connexió: {e}"}
+
+def updateFilm(id, updateFilm):
+    try:
+        conn= filmConnection.db()
+        now = datetime.now()
+        data={
+            "title": updateFilm.title,
+            "director": updateFilm.director,
+            "year": updateFilm.year,
+            "genre": updateFilm.genre,
+            "rating": updateFilm.rating,
+            "country": updateFilm.country,
+            "update_at": now
+        }  
+        conn.films.update_one({"_id" : ObjectId(id)}, {"$set": data})
+        response = {
+                "status": 1,
+                "data": {
+                    "id": id
+                }
+            }
+        return response
+    except Exception as e:
+        return {"status": -1, "message": f"Error de connexió: {e}"}
     
+def deleteFilm(id):
+    try:
+        conn = filmConnection.db()
+        result = conn.films.delete_one({"_id": ObjectId(id)})
+        
+        if result.deleted_count > 0:
+            return {"status": 1, "message": "La pel·lícula s'ha esborrat correctament"}
+        else:
+            return {"status": -1, "message": "La pel·lícula no s'ha trobat a la BBDD"}
+    except Exception as e:
+        return {"status": -1, "message": f"Error de connexió: {e}"}

@@ -29,3 +29,20 @@ def getFilmsByGen(genre: str = "Action"):
     data= filmPeticions.getFilmsByGen(genre)
     return data
 
+#CREA UN NOU DOCUMENT
+@app.post("/film/")
+def createFilm(film: Film):
+    data = filmPeticions.createFilm(film)
+    return data
+
+#ACTUALITZA UN NOU DOCUMENT/FILM. 
+@app.put("/film/{id}")
+def updateProduct(id, film:Film):
+    data=filmPeticions.updateFilm(id, film)
+    return data
+
+#ESBORRA EL DOCUMENT/FILM. 
+@app.delete("/film/{id}")
+def deleteFilm(id):
+    data=filmPeticions.deleteFilm(id)
+    return data
