@@ -1,7 +1,6 @@
 from typing import Union
 from fastapi import FastAPI
 from Model.Film import Film
-from db import filmConnection
 from db import filmPeticions
 
 app = FastAPI(title="Laia Rodríguez Ramos - CRUD + Consultes avançades")
